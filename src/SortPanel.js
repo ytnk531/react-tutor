@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 class Elm extends Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
     <svg transform="scale(1, -1)" viewBox="0 0 10 500" width="10" height="400">
@@ -43,14 +38,14 @@ class SortMachine extends Component {
 
   nextStep(ev) {
     ev.preventDefault();
-    let e = this.insertionSort(this.state.targetRange, this.state.elements);
+    let e = this.bubbleSort(this.state.targetRange, this.state.elements);
     this.setState((prevState) => ({
         elements: e,
         targetRange: prevState.targetRange - 1
     }));
   }
 
-  insertionSort(range, elements) {
+  bubbleSort(range, elements) {
     const e = elements.slice();
     for(let i=0; i<range; i++) {
       if (e[i] > e[i+1]) {
@@ -66,7 +61,7 @@ class SortMachine extends Component {
     ev.preventDefault();
     let e = this.state.elements;
     for(let s=this.state.size; s>0; s--) {
-      e = this.insertionSort(s, e);
+      e = this.bubbleSort(s, e);
     }
     this.setState({
       elements: e,
@@ -90,7 +85,7 @@ class SortMachine extends Component {
       </div>
 
       <div className="insertionSortController">
-      <p>Insertion Sort</p>
+      <p>Bubble Sort</p>
       <button onClick={this.nextStep}>
       Next step
       </button>
