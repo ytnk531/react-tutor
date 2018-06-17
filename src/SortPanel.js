@@ -20,14 +20,12 @@ class SortMachine extends Component {
       size: 100,
       targetRange: 100
     };
-    this.setState((prevState) => ({
-      init: prevState.elements
-    }));
 
     this.renderElm = this.renderElm.bind(this);
     this.nextStep = this.nextStep.bind(this);
     this.sortAll = this.sortAll.bind(this);
     this.reset = this.reset.bind(this);
+    this.init = this.init.bind(this);
   }
 
   renderElm(i) {
@@ -76,6 +74,17 @@ class SortMachine extends Component {
     }));
   }
 
+  init() {
+    const e = Array(100).fill(10).map(() => Math.floor(Math.random()*100)); 
+
+    this.setState((prevState) => ({
+      elements: e,
+      init: e,
+      size: prevState.size,
+      targetRange: prevState.size
+    }));
+  }
+
   render() {
     return (
       <div>
@@ -92,8 +101,14 @@ class SortMachine extends Component {
       <button onClick={this.sortAll}>
       Sort All
       </button>
+      </div>
+
+      <div>
       <button onClick={this.reset}>
       Reset
+      </button>
+      <button onClick={this.init}>
+      New
       </button>
       </div>
 
