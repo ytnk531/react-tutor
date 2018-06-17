@@ -30,7 +30,9 @@ class SortMachine extends Component {
 
   renderElm(i) {
     return (
+      <span key={i}>
       <Elm val={this.state.elements[i]} />
+      </span>
     )
   }
 
@@ -89,7 +91,7 @@ class SortMachine extends Component {
     return (
       <div>
 
-      <div>
+      <div className="Elements">
       {Array.from({length: this.state.size}, (v, k) => this.renderElm(k))}
       </div>
 
