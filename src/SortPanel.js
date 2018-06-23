@@ -1,134 +1,59 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import './App.css';
 
-class Elm extends Component {
-  render() {
-    return (
-    <svg transform="scale(1, -1)" viewBox="0 0 10 500" width="10" height="400">
-    <rect x="1" y="0" width="8" height={this.props.val * 4} fill="#aaa" />
-    </svg>
-  )}
-}
+const Elm = ({ val, coler }) => (
+  <svg transform="scale(1, -1)" viewBox="0 0 10 500" width="10" height="400">
+    <rect x="1" y="0" width="8" height={val * 4} fill={coler} />
+  </svg>
+);
+const Elements = ({ elements, targetRange, i }) => (
+  <div className="Elements">
+    {elements.map((element, index) => (
+      <Elm
+        key={index}
+        val={element}
+        coler={
+          index == i ? '#53c653' : index < targetRange ? '#ccebff' : '#0099cc'
+        }
+      />
+    ))}
+  </div>
+);
+const mapStateToElementsProps = state => state;
+const ElementsContainer = connect(mapStateToElementsProps)(Elements);
 
-class SortMachine extends Component {
-  constructor(props) { 
-    super(props);
-    const e = Array(100).fill(10).map(() => Math.floor(Math.random()*100)); 
-    this.state = {
-      elements: e,
-      init: e,
-      size: 100,
-      targetRange: 100
-    };
-
-    this.renderElm = this.renderElm.bind(this);
-    this.nextStep = this.nextStep.bind(this);
-    this.sortAll = this.sortAll.bind(this);
-    this.reset = this.reset.bind(this);
-    this.init = this.init.bind(this);
-  }
-
-  renderElm(i) {
-    return (
-      <span key={i}>
-      <Elm val={this.state.elements[i]} />
-      </span>
-    )
-  }
-
-  nextStep(ev) {
-    ev.preventDefault();
-    let e = this.bubbleSort(this.state.targetRange, this.state.elements);
-    this.setState((prevState) => ({
-        elements: e,
-        targetRange: prevState.targetRange - 1
-    }));
-  }
-
-  bubbleSort(range, elements) {
-    const e = elements.slice();
-    for(let i=0; i<range; i++) {
-      if (e[i] > e[i+1]) {
-        var tmp = e[i];
-        e[i] = e[i+1];
-        e[i+1] = tmp;
-      }
-    }
-    return e;
-  }
-
-  sortAll(ev) {
-    ev.preventDefault();
-    let e = this.state.elements;
-    for(let s=this.state.size; s>0; s--) {
-      e = this.bubbleSort(s, e);
-    }
-    this.setState({
-      elements: e,
-    });
-  }
-
-  reset(ev) {
-    ev.preventDefault();
-    this.setState((prevState) => ({
-      elements: prevState.init,
-      targetRange: prevState.size,
-    }));
-  }
-
-  init() {
-    const e = Array(100).fill(10).map(() => Math.floor(Math.random()*100)); 
-
-    this.setState((prevState) => ({
-      elements: e,
-      init: e,
-      size: prevState.size,
-      targetRange: prevState.size
-    }));
-  }
-
-  render() {
-    return (
-      <div>
-
-      <div className="Elements">
-      {Array.from({length: this.state.size}, (v, k) => this.renderElm(k))}
-      </div>
-
-      <div className="insertionSortController">
+const Controllers = ({ dispatch, size }) => (
+  <div className="insertionSortController">
+    <div>
       <p>Bubble Sort</p>
-      <button onClick={this.nextStep}>
-      Next step
-      </button>
-      <button onClick={this.sortAll}>
-      Sort All
-      </button>
-      </div>
-
       <div>
-      <button onClick={this.reset}>
-      Reset
-      </button>
-      <button onClick={this.init}>
-      New
-      </button>
+        Number Of Elements
+        <input
+          type="text"
+          onChange={e => dispatch({ type: 'CHANGESIZE', size: e.target.value })}
+          value={size}
+        />
       </div>
+      <button onClick={() => dispatch({ type: 'MINI' })}>Mini step</button>
+      <button onClick={() => dispatch({ type: 'NEXT' })}>Next step</button>
+      <button onClick={() => dispatch({ type: 'GO' })}>Sort All</button>
+    </div>
 
-      </div>
-    )
-  }
-}
+    <div>
+      <button onClick={() => dispatch({ type: 'RESET' })}>Reset</button>
+      <button onClick={() => dispatch({ type: 'NEW' })}>New</button>
+    </div>
+  </div>
+);
+const mapStateToControllerProps = state => state;
+const ControllersContainer = connect(mapStateToControllerProps)(Controllers);
 
-class SortPanel extends Component {
-  changeRate() { }
-
-  render() {
-    return (
-      <div className="SortPanel">
-      <SortMachine />
-      </div>
-    );
-  }
-}
+const SortPanel = () => (
+  <div className="SortPanel">
+    <ElementsContainer />
+    <ControllersContainer />
+  </div>
+);
 
 export default SortPanel;
