@@ -16,23 +16,31 @@ const Elm = ({ val, color }) => (
     <rect x="1" y="0" width="8" height={val * 5} fill={color} />
   </svg>
 );
-const Elements = ({ elements, targetRange, i }) => (
+const Elements = ({ elements, isActive, isUnsorted }) => (
   <div className="Elements center-block text-center">
     {elements.map((element, index) => (
       <Elm
         key={index}
         val={element}
         color={
-          index === i ? '#53c653' : index < targetRange ? '#ccebff' : '#0099cc'
+          isActive(index)
+            ? '#53c653'
+            : isUnsorted(index)
+              ? '#ccebff'
+              : '#0099cc'
         }
       />
     ))}
   </div>
 );
-const mapStateToElementsProps = state => state;
+const mapStateToElementsProps = state => ({
+  elements: state.elements,
+  isUnsorted: n => n < state.targetRange,
+  isActive: n => n === state.i
+});
 const ElementsContainer = connect(mapStateToElementsProps)(Elements);
 
-const Controllers = ({ dispatch, size, targetRange }) => (
+const Controllers = ({ dispatch, size, sorted }) => (
   <div className="insertionSortController center-block text-center">
     <Row>
       <Col xs={4} xsOffset={4}>
@@ -46,22 +54,13 @@ const Controllers = ({ dispatch, size, targetRange }) => (
     </Row>
     <Row>
       <ButtonGroup>
-        <Button
-          onClick={() => dispatch({ type: 'MINI' })}
-          disabled={targetRange < 1}
-        >
+        <Button onClick={() => dispatch({ type: 'MINI' })} disabled={sorted}>
           1 step
         </Button>
-        <Button
-          onClick={() => dispatch({ type: 'NEXT' })}
-          disabled={targetRange < 1}
-        >
+        <Button onClick={() => dispatch({ type: 'NEXT' })} disabled={sorted}>
           1 loop
         </Button>
-        <Button
-          onClick={() => dispatch({ type: 'GO' })}
-          disabled={targetRange < 1}
-        >
+        <Button onClick={() => dispatch({ type: 'GO' })} disabled={sorted}>
           Sort All
         </Button>
       </ButtonGroup>
@@ -75,7 +74,10 @@ const Controllers = ({ dispatch, size, targetRange }) => (
     </Row>
   </div>
 );
-const mapStateToControllerProps = state => state;
+const mapStateToControllerProps = ({ size, targetRange }) => ({
+  size,
+  sorted: targetRange < 1
+});
 const ControllersContainer = connect(mapStateToControllerProps)(Controllers);
 
 const SortPanel = () => (
