@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
+import SortPanel from './SortPanel';
 import registerServiceWorker from './registerServiceWorker';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
+import 'bootstrap/dist/css/bootstrap.css';
 
 const swap = (array, index1, index2) => {
   const sw = (array, small, big) => [
@@ -34,10 +34,11 @@ const bubbleSort = (elements, range) => [
   ...elements.slice(range, elements.length)
 ];
 
-const generateElements = () =>
-  Array(100)
-    .fill(0)
-    .map(() => Math.floor(Math.random() * 100));
+const generateElements = size => {
+  console.log(size);
+  console.log(new Array(size).fill(100));
+  return new Array(size).fill(0).map(() => Math.floor(Math.random() * 100));
+};
 
 const elements = ({ elements, init, targetRange, i, size }, action) => {
   const state = { elements, init, targetRange, i, size };
@@ -86,7 +87,7 @@ const elements = ({ elements, init, targetRange, i, size }, action) => {
         targetRange: 0
       };
     case 'NEW':
-      const newini = generateElements();
+      const newini = generateElements(elements.length);
       return {
         ...state,
         i: 0,
@@ -102,33 +103,37 @@ const elements = ({ elements, init, targetRange, i, size }, action) => {
         targetRange: init.length
       };
     case 'CHANGESIZE':
-      console.log(action.size);
-      const ewini = generateElements().slice(0, action.size);
+      const newsize = parseInt(action.size, 10);
+      if (!(newsize > 0)) {
+        return { ...state, size: action.size };
+      }
+      const ewini = generateElements(newsize);
+      console.log(ewini);
       return {
         elements: ewini,
         targetRange: ewini.length,
         init: ewini,
         i: 0,
-        size: action.size
+        size: ewini.length
       };
     default:
       return state;
   }
 };
 
-const ini = generateElements();
+const ini = generateElements(100);
 const initialState = {
   elements: ini,
   targetRange: ini.length,
   init: ini,
   i: 0,
-  size: 100
+  size: ini.length
 };
 const store = createStore(elements, initialState);
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <SortPanel />
   </Provider>,
   document.getElementById('root')
 );

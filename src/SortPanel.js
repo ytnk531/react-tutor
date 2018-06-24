@@ -1,10 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import './App.css';
+import {
+  Grid,
+  Row,
+  Button,
+  ButtonGroup,
+  FormControl,
+  ControlLabel
+} from 'react-bootstrap';
+import './SortPanel.css';
 
-const Elm = ({ val, coler }) => (
+const Elm = ({ val, color }) => (
   <svg transform="scale(1, -1)" viewBox="0 0 10 500" width="10" height="400">
-    <rect x="1" y="0" width="8" height={val * 4} fill={coler} />
+    <rect x="1" y="0" width="8" height={val * 5} fill={color} />
   </svg>
 );
 const Elements = ({ elements, targetRange, i }) => (
@@ -13,8 +21,8 @@ const Elements = ({ elements, targetRange, i }) => (
       <Elm
         key={index}
         val={element}
-        coler={
-          index == i ? '#53c653' : index < targetRange ? '#ccebff' : '#0099cc'
+        color={
+          index === i ? '#53c653' : index < targetRange ? '#ccebff' : '#0099cc'
         }
       />
     ))}
@@ -25,24 +33,27 @@ const ElementsContainer = connect(mapStateToElementsProps)(Elements);
 
 const Controllers = ({ dispatch, size }) => (
   <div className="insertionSortController">
+    <div className="col-xs-2">
+      <ControlLabel>Number Of Elements</ControlLabel>
+      <FormControl
+        type="text"
+        onChange={e => dispatch({ type: 'CHANGESIZE', size: e.target.value })}
+        value={size}
+      />
+    </div>
     <div>
-      <p>Bubble Sort</p>
-      <div>
-        Number Of Elements
-        <input
-          type="text"
-          onChange={e => dispatch({ type: 'CHANGESIZE', size: e.target.value })}
-          value={size}
-        />
-      </div>
-      <button onClick={() => dispatch({ type: 'MINI' })}>Mini step</button>
-      <button onClick={() => dispatch({ type: 'NEXT' })}>Next step</button>
-      <button onClick={() => dispatch({ type: 'GO' })}>Sort All</button>
+      <ButtonGroup>
+        <Button onClick={() => dispatch({ type: 'MINI' })}>Mini step</Button>
+        <Button onClick={() => dispatch({ type: 'NEXT' })}>Next step</Button>
+        <Button onClick={() => dispatch({ type: 'GO' })}>Sort All</Button>
+      </ButtonGroup>
     </div>
 
     <div>
-      <button onClick={() => dispatch({ type: 'RESET' })}>Reset</button>
-      <button onClick={() => dispatch({ type: 'NEW' })}>New</button>
+      <ButtonGroup>
+        <Button onClick={() => dispatch({ type: 'RESET' })}>Reset</Button>
+        <Button onClick={() => dispatch({ type: 'NEW' })}>New</Button>
+      </ButtonGroup>
     </div>
   </div>
 );
@@ -51,8 +62,17 @@ const ControllersContainer = connect(mapStateToControllerProps)(Controllers);
 
 const SortPanel = () => (
   <div className="SortPanel">
-    <ElementsContainer />
-    <ControllersContainer />
+    <Grid>
+      <Row>
+        <h1>Bubble Sort</h1>
+      </Row>
+      <Row>
+        <ElementsContainer />
+      </Row>
+      <Row>
+        <ControllersContainer />
+      </Row>
+    </Grid>
   </div>
 );
 
