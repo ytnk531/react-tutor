@@ -67,7 +67,7 @@ const Controllers = ({ dispatch, size, targetRange }) => (
       </ButtonGroup>
     </Row>
 
-    <Row className="center-block text-center">
+    <Row>
       <ButtonGroup>
         <Button onClick={() => dispatch({ type: 'RESET' })}>Reset</Button>
         <Button onClick={() => dispatch({ type: 'NEW' })}>New</Button>
@@ -82,7 +82,7 @@ const SortPanel = () => (
   <div className="SortPanel">
     <Grid>
       <h1 className="text-center">Bubble Sort</h1>
-      <Row classNeme="center-block text-center">
+      <Row>
         <ElementsContainer />
       </Row>
       <ControllersContainer />
