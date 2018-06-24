@@ -35,7 +35,7 @@ const ElementsContainer = connect(mapStateToElementsProps)(Elements);
 const Controllers = ({ dispatch, size }) => (
   <div className="insertionSortController center-block text-center">
     <Row>
-      <Col xs={2} xsOffset={5}>
+      <Col xs={4} xsOffset={4}>
         <ControlLabel>Number Of Elements</ControlLabel>
         <FormControl
           type="text"
