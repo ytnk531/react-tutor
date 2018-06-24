@@ -34,12 +34,8 @@ const bubbleSort = (elements, range) => [
   ...elements.slice(range, elements.length)
 ];
 
-const generateElements = size => {
-  console.log(size);
-  console.log(new Array(size).fill(100));
-  return new Array(size).fill(0).map(() => Math.floor(Math.random() * 100));
-};
-
+const generateElements = size =>
+  new Array(size).fill(0).map(() => Math.floor(Math.random() * 100));
 const elements = ({ elements, init, targetRange, i, size }, action) => {
   const state = { elements, init, targetRange, i, size };
   switch (action.type) {

@@ -17,7 +17,7 @@ const Elm = ({ val, color }) => (
   </svg>
 );
 const Elements = ({ elements, targetRange, i }) => (
-  <div className="Elements">
+  <div className="Elements center-block text-center">
     {elements.map((element, index) => (
       <Elm
         key={index}
@@ -32,7 +32,7 @@ const Elements = ({ elements, targetRange, i }) => (
 const mapStateToElementsProps = state => state;
 const ElementsContainer = connect(mapStateToElementsProps)(Elements);
 
-const Controllers = ({ dispatch, size }) => (
+const Controllers = ({ dispatch, size, targetRange }) => (
   <div className="insertionSortController center-block text-center">
     <Row>
       <Col xs={4} xsOffset={4}>
@@ -41,15 +41,29 @@ const Controllers = ({ dispatch, size }) => (
           type="text"
           onChange={e => dispatch({ type: 'CHANGESIZE', size: e.target.value })}
           value={size}
-          bsSize="10em"
         />
       </Col>
     </Row>
     <Row>
       <ButtonGroup>
-        <Button onClick={() => dispatch({ type: 'MINI' })}>Mini step</Button>
-        <Button onClick={() => dispatch({ type: 'NEXT' })}>Next step</Button>
-        <Button onClick={() => dispatch({ type: 'GO' })}>Sort All</Button>
+        <Button
+          onClick={() => dispatch({ type: 'MINI' })}
+          disabled={targetRange < 1}
+        >
+          1 step
+        </Button>
+        <Button
+          onClick={() => dispatch({ type: 'NEXT' })}
+          disabled={targetRange < 1}
+        >
+          1 loop
+        </Button>
+        <Button
+          onClick={() => dispatch({ type: 'GO' })}
+          disabled={targetRange < 1}
+        >
+          Sort All
+        </Button>
       </ButtonGroup>
     </Row>
 
@@ -68,7 +82,7 @@ const SortPanel = () => (
   <div className="SortPanel">
     <Grid>
       <h1 className="text-center">Bubble Sort</h1>
-      <Row>
+      <Row classNeme="center-block text-center">
         <ElementsContainer />
       </Row>
       <ControllersContainer />
